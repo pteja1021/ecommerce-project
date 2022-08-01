@@ -1,0 +1,70 @@
+.product-page-container{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 2em 1em;
+    height: 90%;
+}
+.product-page-container div{
+    flex:1;
+}
+.product-page-image{
+    max-width: 90%;
+    max-height: 90%;
+}
+.product-page-product-description{
+    margin:1em 2em;
+}
+.product-page-price span{
+    font-weight: bold;
+}
+.variant-buttons{
+    border:none;
+    padding:'1em';
+    padding:1em;
+    border-radius:0.4em;
+    margin:0.2em;
+    transition-duration: 300ms;
+}
+.variant-buttons:hover{
+    border:1px solid black;
+    cursor: pointer;
+}
+.add-to-cart-button{
+    background-color: rgb(58, 36, 255);
+    color: white;
+    border:none;
+    font-size: 1em;
+    border-radius: 0.3em;
+    text-decoration: none;
+    padding:0.5em;
+    transition-duration: 200ms ;
+    margin:1em 0em;
+}
+.add-to-cart-button:hover{
+    cursor: pointer;
+    background-color: rgba(52, 112, 240, 0.404);
+    color: black;
+    border:1px solid black;
+}
+.counter{
+    display: flex;
+    justify-content: flex-start;
+}
+.quantity-buttons{
+    margin: 0.5em;
+    border: none;
+    color: white;
+    background-color: blue;
+    font-size:1em;
+    border-radius: 0.5em;
+    font-weight: bold;
+    width:5%;
+    transition-duration:200ms ;
+}
+.quantity-buttons:hover{
+    background-color:  rgba(52, 112, 240, 0.404);
+    border:0.5px solid black;
+    color: black;
+    cursor: pointer;
+}
