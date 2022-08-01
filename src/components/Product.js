@@ -58,8 +58,16 @@ function Product(props){
             setQuantity(currentQuantity-1);
         }
         else { 
-            setCart({...currentCart,[data['id']]:currentCart[data['id']]-1})
+            if (currentCart[data['id']]===1){
+                let a={...currentCart}
+                delete a[data.id]
+                setCart(a);
+            }
+            else{
+                setCart({...currentCart,[data['id']]:currentCart[data['id']]-1})
+            }
             setQuantity(currentQuantity+1);
+            console.log(currentCart)
         }
     }
     
@@ -73,17 +81,20 @@ function Product(props){
                 <p>{data['description']}</p>
                 <p className='product-page-price'>Price : <span>{`$ ${data['price']}`}</span></p>
                 <p>Quantity : {currentQuantity}</p>
-                <p>Quantity : {getQuantityText()}</p>
+                <p>{getQuantityText()}</p>
                 {data?.variants.map((variant,index)=>{
                     return <button className='variant-buttons' key={variant.color} style={{backgroundColor: variant.color}} onClick={()=>{ setCurrentImage(variant?.image) }}></button>
                 })}
                 <br/>
-                <button className='add-to-cart-button' onClick={addToCart}>Add to Cart</button>
-                { <div className='counter'>                
-                    <button className='quantity-buttons' disabled={currentQuantity===0?true:false} onClick={ () =>  triggerChangeInQuantity('+')  }>+</button>
-                    <p>{currentCart[data['id']]}</p>
-                    <button className='quantity-buttons' disabled={currentQuantity===data['quantity']?true:false} onClick={ () =>  triggerChangeInQuantity('-')  }>-</button>
-                </div> }
+
+                {(data['id'] in currentCart)?
+                    (<div className='counter'>                
+                        <button className='quantity-buttons' disabled={currentQuantity===0?true:false} onClick={ () =>  triggerChangeInQuantity('+')  }>+</button>
+                        <p>{currentCart[data['id']]}</p>
+                        <button className='quantity-buttons' disabled={currentQuantity===data['quantity']?true:false} onClick={ () =>  triggerChangeInQuantity('-')  }>-</button>
+                    </div>):
+                    <button className='add-to-cart-button' onClick={addToCart}>Add to Cart</button>
+                }
             </div>
         </div>
     )
