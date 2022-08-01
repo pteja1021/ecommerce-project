@@ -68,3 +68,8 @@
     color: black;
     cursor: pointer;
 }
+.quantity-buttons:disabled{
+    background-color: grey;
+    border:none;
+    color:black;
+}
