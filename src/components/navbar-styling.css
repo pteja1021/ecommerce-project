@@ -2,6 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 .navbar-container{
     display: flex;
@@ -24,9 +25,8 @@
 .all-cart-items{
     position: absolute;
     top:4em;
-    right:24em;
-    width: 24%;
-    /* display: none; */
+    right:0em;
+    max-width: 40%;
 }
 .all-items-container{
     display: flex;
