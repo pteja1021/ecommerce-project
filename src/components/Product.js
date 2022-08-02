@@ -4,16 +4,16 @@ import axios from 'axios'
 import {useParams} from 'react-router-dom'
 import {useState,useEffect} from 'react'
 import {useRecoilState} from 'recoil';
+import {cartAtom} from '../atoms/cartAtom'
 
+function Product(){
 
-function Product(props){
-
-    const [currentCart,setCart]=useRecoilState(props.atom);
+    const [currentCart,setCart]=useRecoilState(cartAtom);
     const params=useParams();
     let productId=params['id'];
     if (params['id']===':id')
         productId=1;
-    const {data,status,isFetching}=useQuery(["products"], async () => {const { data } = await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${productId}`);
+    const {data,status,isFetching}=useQuery([`showProduct-${productId}`], async () => {const { data } = await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${productId}`);
                                                                     return data;}
                                             );
 
@@ -27,9 +27,9 @@ function Product(props){
     const [currentQuantity,setQuantity]=useState(0)
     useEffect(()=>{
         if (data){
-            setQuantity(data?.quantity)
+            setQuantity(data?.quantity-(currentCart[data['id']]? currentCart[data['id']]:0))
         }
-    },[data])
+    },[data,currentCart])
 
     if (status==='error')
         return <h1>Server Down</h1>
@@ -54,7 +54,7 @@ function Product(props){
     
     function triggerChangeInQuantity(sign){
         if (sign==='+'){
-            setCart({...currentCart,[data['id']]:currentCart[data['id']]+1})
+            setCart({...currentCart,[data.id]:currentCart[data.id]+1})
             setQuantity(currentQuantity-1);
         }
         else { 
@@ -62,12 +62,13 @@ function Product(props){
                 let a={...currentCart}
                 delete a[data.id]
                 setCart(a);
+                setQuantity(data['quantity']);
             }
             else{
-                setCart({...currentCart,[data['id']]:currentCart[data['id']]-1})
+                setCart({...currentCart,[data.id]:currentCart[data.id]-1})
+                setQuantity(currentQuantity+1);
             }
-            setQuantity(currentQuantity+1);
-            console.log(currentCart)
+            
         }
     }
     
@@ -80,7 +81,7 @@ function Product(props){
                 <h2>{data['name']}</h2>
                 <p>{data['description']}</p>
                 <p className='product-page-price'>Price : <span>{`$ ${data['price']}`}</span></p>
-                <p>Quantity : {currentQuantity}</p>
+                <p>Left Over: {currentQuantity}</p>
                 <p>{getQuantityText()}</p>
                 {data?.variants.map((variant,index)=>{
                     return <button className='variant-buttons' key={variant.color} style={{backgroundColor: variant.color}} onClick={()=>{ setCurrentImage(variant?.image) }}></button>
