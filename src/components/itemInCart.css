@@ -9,6 +9,9 @@
 .single-item-container div{
     margin: 0.5em;
 }
+.single-item-container:hover{
+    border:1px solid navy;
+}
 .cart-item-image{
     flex: 1;
     max-width: 100%;

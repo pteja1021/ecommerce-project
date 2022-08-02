@@ -14,7 +14,7 @@ function ItemInCart({id,quantity}){
                     <img src={data.image} alt='cart-item'/>
                 </div>
                 <div className="cart-item-description">
-                    <p><strong>{data.name}</strong></p>
+                    <p className="cart-item-description-name"><strong>{data.name}</strong></p>
                     <p>{data.description}</p>
                     <p>Quantity: {quantity}</p>
                     <p>Price: <strong>$ {quantity*data.price}</strong></p>

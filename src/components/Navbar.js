@@ -42,7 +42,7 @@ function Navbar(){
                 <button className='cart-button' onClick={changeVisibility}>{`Cart(${ Object.keys(currentCart).length})`}</button>
                 <div className='all-cart-items' style={{display:[visibility]}}>
                     <div className="all-items-container" style={{border:[borderStyle]}}>
-                        {Object.keys(currentCart).map((id)=><Link style={styleForLink} to={`/products/${id}`} ><ItemInCart id={id} quantity={currentCart[`${id}`]} /></Link>)}
+                        {Object.keys(currentCart).map((id)=><Link style={styleForLink} to={`/products/${id}`} key={id}><ItemInCart id={id} quantity={currentCart[`${id}`]} /></Link>)}
                     </div>
                 </div>
             </div>
