@@ -17,7 +17,7 @@ function ItemInCart({id,quantity}){
                     <p><strong>{data.name}</strong></p>
                     <p>{data.description}</p>
                     <p>Quantity: {quantity}</p>
-                    <p>Price: <strong>{quantity*data.price}</strong></p>
+                    <p>Price: <strong>$ {quantity*data.price}</strong></p>
                 </div>
             </div>
         )

@@ -1,15 +1,20 @@
-import {NavLink} from 'react-router-dom'
+import {NavLink,Link} from 'react-router-dom'
 import './navbar-styling.css'
 import {useEffect, useState} from 'react'
 import {useRecoilState} from 'recoil'
 import ItemInCart from './ItemInCart'
 import {cartAtom} from '../atoms/cartAtom'
 
-function Navbar(){
 
+function Navbar(){
     //eslint-disable-next-line
     const [currentCart,setCart]=useRecoilState(cartAtom)
 
+    const styleForLink={
+        textDecoration:'none',
+        color:'black',
+        border:'2px solid white'
+    }
     const [borderStyle,setBorderStyle]=useState('none')
     useEffect(()=>{
         if (Object.keys(currentCart).length!==0)
@@ -37,7 +42,7 @@ function Navbar(){
                 <button className='cart-button' onClick={changeVisibility}>{`Cart(${ Object.keys(currentCart).length})`}</button>
                 <div className='all-cart-items' style={{display:[visibility]}}>
                     <div className="all-items-container" style={{border:[borderStyle]}}>
-                        {Object.keys(currentCart).map((id)=><ItemInCart key={id} id={id} quantity={currentCart[`${id}`]} /> )}
+                        {Object.keys(currentCart).map((id)=><Link style={styleForLink} to={`/products/${id}`} ><ItemInCart id={id} quantity={currentCart[`${id}`]} /></Link>)}
                     </div>
                 </div>
             </div>
