@@ -81,7 +81,7 @@ function Product(){
                 <h2>{data['name']}</h2>
                 <p>{data['description']}</p>
                 <p className='product-page-price'>Price : <span>{`$ ${data['price']}`}</span></p>
-                <p>Left Over: {currentQuantity}</p>
+                {/* <p>Left Over: {currentQuantity}</p> */}
                 <p>{getQuantityText()}</p>
                 {data?.variants.map((variant,index)=>{
                     return <button className='variant-buttons' key={variant.color} style={{backgroundColor: variant.color}} onClick={()=>{ setCurrentImage(variant?.image) }}></button>
