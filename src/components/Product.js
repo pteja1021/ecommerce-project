@@ -12,7 +12,6 @@ function Product(){
 
     const [currentCart,setCart]=useCart();
     const params=useParams();
-    const [refetch,setRefetch]=useState(true);
     let productId=params['id'];
     if (params['id']===':id')
         productId=1;
@@ -21,7 +20,7 @@ function Product(){
                                                                     return data;}
                                             );
     
-    const {data:reviewData}=useQuery([`showReviewFor-${productId}`,productId,refetch],getReviews);
+    const {data:reviewData}=useQuery([`showReviewFor-${productId}`,productId],getReviews);
 
     const mutation=useMutation(newReview=>{
         return axios.post(`https://obscure-refuge-62167.herokuapp.com/products/${productId}/reviews`,newReview)
@@ -53,16 +52,8 @@ function Product(){
             review: Yup.string().max(30,'Must be less than 30 characters').required('Required')
         }),
         onSubmit:values=>{ 
-            mutation.mutate({"name": values.name,"rating": values.rating,"review": values.review,"product_id": [productId]})
-            if (mutation.isSuccess){
-                alert('Review added')
-                if (refetch){
-                    setRefetch(false)
-                }
-                else{
-                    setRefetch(true)
-                }
-            }
+            mutation.mutate({"name": values.name,"rating": values.rating,"review": values.review,"product_id": [productId]},{onSuccess:()=>{ alert('Review Added!');
+                                                                                                                                             window.location.reload() }})
             values.name='';
             values.rating='';
             values.review='';
