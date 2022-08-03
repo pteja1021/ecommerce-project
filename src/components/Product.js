@@ -52,8 +52,7 @@ function Product(){
             review: Yup.string().max(30,'Must be less than 30 characters').required('Required')
         }),
         onSubmit:values=>{ 
-            mutation.mutate({"name": values.name,"rating": values.rating,"review": values.review,"product_id": [productId]},{onSuccess:()=>{ alert('Review Added!');
-                                                                                                                                             window.location.reload() }})
+            mutation.mutate({"name": values.name,"rating": values.rating,"review": values.review,"product_id": [productId]},{onSuccess:()=>{ alert('Review Added!');}})
             values.name='';
             values.rating='';
             values.review='';
