@@ -1,21 +1,31 @@
 import './product-page-styling.css'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery,useMutation} from '@tanstack/react-query'
 import axios from 'axios'
 import {useParams} from 'react-router-dom'
 import {useState,useEffect} from 'react'
-import {useRecoilState} from 'recoil';
-import {cartAtom} from '../atoms/cartAtom'
+import {useCart} from '../atoms/cartAtom'
+import {getReviews} from '../apis/ProductApis'
+import {useFormik} from 'formik'
+import * as Yup from 'yup';
 
 function Product(){
 
-    const [currentCart,setCart]=useRecoilState(cartAtom);
+    const [currentCart,setCart]=useCart();
     const params=useParams();
+    const [refetch,setRefetch]=useState(true);
     let productId=params['id'];
     if (params['id']===':id')
         productId=1;
+    
     const {data,status,isFetching}=useQuery([`showProduct-${productId}`], async () => {const { data } = await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${productId}`);
                                                                     return data;}
                                             );
+    
+    const {data:reviewData}=useQuery([`showReviewFor-${productId}`,productId,refetch],getReviews);
+
+    const mutation=useMutation(newReview=>{
+        return axios.post(`https://obscure-refuge-62167.herokuapp.com/products/${productId}/reviews`,newReview)
+    })
 
     const [currentImage,setCurrentImage]=useState('')
     useEffect(()=>{
@@ -30,6 +40,34 @@ function Product(){
             setQuantity(data?.quantity-(currentCart[data['id']]? currentCart[data['id']]:0))
         }
     },[data,currentCart])
+
+    const formik=useFormik({
+        initialValues:{
+            name:'',
+            rating:'',
+            review:''
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().required('Required').matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
+            rating: Yup.number().required('Required').min(0).max(5),
+            review: Yup.string().max(30,'Must be less than 30 characters').required('Required')
+        }),
+        onSubmit:values=>{ 
+            mutation.mutate({"name": values.name,"rating": values.rating,"review": values.review,"product_id": [productId]})
+            if (mutation.isSuccess){
+                alert('Review added')
+                if (refetch){
+                    setRefetch(false)
+                }
+                else{
+                    setRefetch(true)
+                }
+            }
+            values.name='';
+            values.rating='';
+            values.review='';
+        }
+    })
 
     if (status==='error')
         return <h1>Server Down</h1>
@@ -72,6 +110,7 @@ function Product(){
         }
     }
     
+    
     return (
         <div className='product-page-container'>
             <div className='product-page-image'>
@@ -81,7 +120,7 @@ function Product(){
                 <h2>{data['name']}</h2>
                 <p>{data['description']}</p>
                 <p className='product-page-price'>Price : <span>{`$ ${data['price']}`}</span></p>
-                {/* <p>Left Over: {currentQuantity}</p> */}
+                <p>Left Over: {currentQuantity}</p>
                 <p>{getQuantityText()}</p>
                 {data?.variants.map((variant,index)=>{
                     return <button className='variant-buttons' key={variant.color} style={{backgroundColor: variant.color}} onClick={()=>{ setCurrentImage(variant?.image) }}></button>
@@ -96,6 +135,32 @@ function Product(){
                     </div>):
                     <button className='add-to-cart-button' onClick={addToCart}>Add to Cart</button>
                 }
+                <div className='create-reviews-div'>
+                    <h3>Create your Review here!</h3>
+                    <form onSubmit={formik.handleSubmit} className='create-reviews-form' autoComplete='off'>
+                        <label htmlFor='name'/>
+                        <input id='name' name='name' type='text' placeholder='Name' {...formik.getFieldProps('name')} required></input>
+                        {formik.touched.name && formik.errors.name ? (<div className='formik-errors'>{formik.errors.name}</div>) : null}
+                        <label htmlFor='rating'/>
+                        <input id='rating' name='rating' type='number' placeholder='Rating' {...formik.getFieldProps('rating')} required></input>
+                        {formik.touched.rating && formik.errors.rating ? (<div className='formik-errors'>{formik.errors.rating}</div>) : null}
+                        <label htmlFor='review'/>
+                        <input id='review' name='review' type='text' placeholder='Review' {...formik.getFieldProps('review')} required></input>
+                        {formik.touched.review && formik.errors.review ? (<div className='formik-errors'>{formik.errors.review}</div>) : null}
+                        <button type='submit' className='create-reviews-button'>Create Review</button>
+                    </form>
+                    
+                </div>
+                <div className='product-reviews'>
+                    <h3>All Reviews</h3>
+                    {
+                        (reviewData?reviewData['ratings'].map((review)=>(<div className='each-customer-review' key={review.id}>
+                            <p><strong>Customer</strong>: {review.name} </p>
+                            <p><strong>Rating</strong>: {String.fromCharCode(11088).repeat(review.rating)}</p>
+                            <p><strong>Review</strong>: {review.review}</p>
+                        </div>)):<h3>Loading..</h3>)
+                    }
+                </div>
             </div>
         </div>
     )

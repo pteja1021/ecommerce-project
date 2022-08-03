@@ -1,14 +1,13 @@
 import {NavLink,Link} from 'react-router-dom'
 import './navbar-styling.css'
 import {useEffect, useState} from 'react'
-import {useRecoilState} from 'recoil'
 import ItemInCart from './ItemInCart'
-import {cartAtom} from '../atoms/cartAtom'
+import {useCart} from '../atoms/cartAtom'
 
 
 function Navbar(){
     //eslint-disable-next-line
-    const [currentCart,setCart]=useRecoilState(cartAtom)
+    const [currentCart,setCart]=useCart()
 
     const styleForLink={
         textDecoration:'none',
