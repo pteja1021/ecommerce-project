@@ -1,14 +1,12 @@
 import Card from './Card'
 import './home-styling.css'
+import { getAllProducts } from '../apis/ProductApis';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import {useNavigate} from 'react-router-dom'
 
 function Home(){
     const navigate=useNavigate();
-    const {data,status,isFetching}=useQuery(["allProducts"], async () => {const { data } = await axios.get("https://obscure-refuge-62167.herokuapp.com/products");
-                                                                            return data;}
-                                            )
+    const {data,status,isFetching}=useQuery(["allProducts"], getAllProducts )
 
     if (status==='error')
         return <h1>Please try later, Server Down</h1>

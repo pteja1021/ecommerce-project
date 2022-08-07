@@ -1,14 +1,12 @@
-import axios from "axios";
+import { getSingleProduct } from "../apis/ProductApis";
 import {useQuery} from '@tanstack/react-query';
 import './itemInCart.css'
 function ItemInCart({id,quantity}){
-    const {data,status,isFetching}=useQuery([`cart-item-${id}`], async () => {const { data } = await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${id}`);
-                                                                    return data;}
-                                            );
-        if (status==='error' || status==='loading' || isFetching){
-            return <p>Loading</p>
-        }
-        return (
+    const {data,status,isFetching}=useQuery([`cart-item-${id}`,id], getSingleProduct);
+    if (status==='error' || status==='loading' || isFetching){
+        return <p>Loading</p>
+    }
+    return (
             <div className='single-item-container'>
                 <div className="cart-item-image">
                     <img src={data.image} alt='cart-item'/>

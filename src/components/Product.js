@@ -5,6 +5,7 @@ import {useParams} from 'react-router-dom'
 import {useState,useEffect} from 'react'
 import {useCart} from '../atoms/cartAtom'
 import {getReviews} from '../apis/ProductApis'
+import { getSingleProduct } from '../apis/ProductApis'
 import {useFormik} from 'formik'
 import * as Yup from 'yup';
 
@@ -16,9 +17,7 @@ function Product(){
     if (params['id']===':id')
         productId=1;
     
-    const {data,status,isFetching}=useQuery([`showProduct-${productId}`], async () => {const { data } = await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${productId}`);
-                                                                    return data;}
-                                            );
+    const {data,status,isFetching}=useQuery([`showProduct-${productId}`,productId], getSingleProduct);
     
     const {data:reviewData}=useQuery([`showReviewFor-${productId}`,productId],getReviews);
 

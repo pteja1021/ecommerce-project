@@ -2,12 +2,11 @@ import {NavLink,Link} from 'react-router-dom'
 import './navbar-styling.css'
 import {useEffect, useState} from 'react'
 import ItemInCart from './ItemInCart'
-import {useCart} from '../atoms/cartAtom'
-
+import { useCart } from '../atoms/cartAtom'
 
 function Navbar(){
     //eslint-disable-next-line
-    const [currentCart,setCart]=useCart()
+    const [currentCart,setCart]=useCart();
 
     const styleForLink={
         textDecoration:'none',
@@ -38,6 +37,7 @@ function Navbar(){
                 <NavLink to='/products/:id'>Product</NavLink>
             </div>
             <div className='parent-cart-div'>
+                {console.log(currentCart)}
                 <button className='cart-button' onClick={changeVisibility}>{`Cart(${ Object.keys(currentCart).length})`}</button>
                 <div className='all-cart-items' style={{display:[visibility]}}>
                     <div className="all-items-container" style={{border:[borderStyle]}}>
