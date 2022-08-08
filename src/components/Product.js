@@ -8,9 +8,10 @@ import {getReviews} from '../apis/ProductApis'
 import { getSingleProduct } from '../apis/ProductApis'
 import {useFormik} from 'formik'
 import * as Yup from 'yup';
+import { useQueryClient } from '@tanstack/react-query'
 
 function Product(){
-
+    const queryClient = useQueryClient();
     const [currentCart,setCart]=useCart();
     const params=useParams();
     let productId=params['id'];
@@ -19,7 +20,7 @@ function Product(){
     
     const {data,status,isFetching}=useQuery([`showProduct-${productId}`,productId], getSingleProduct);
     
-    const {data:reviewData}=useQuery([`showReviewFor-${productId}`,productId],getReviews);
+    const {data:reviewData}=useQuery(['product',productId,'reviews'],getReviews);
 
     const mutation=useMutation(newReview=>{
         return axios.post(`https://obscure-refuge-62167.herokuapp.com/products/${productId}/reviews`,newReview)
@@ -39,7 +40,7 @@ function Product(){
         }
     },[data,currentCart])
 
-    const formik=useFormik({
+    const formik = useFormik({
         initialValues:{
             name:'',
             rating:'',
@@ -51,7 +52,17 @@ function Product(){
             review: Yup.string().max(30,'Must be less than 30 characters').required('Required')
         }),
         onSubmit:values=>{ 
-            mutation.mutate({"name": values.name,"rating": values.rating,"review": values.review,"product_id": [productId]},{onSuccess:()=>{ alert('Review Added!');}})
+            mutation.mutate(
+                {
+                    "name": values.name,
+                    "rating": values.rating,
+                    "review": values.review,
+                    "product_id": [productId]
+                },
+                {
+                    onSuccess: async ()=> { await queryClient.refetchQueries(['product',productId,'reviews']);}
+                }
+                )
             values.name='';
             values.rating='';
             values.review='';
