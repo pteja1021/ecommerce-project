@@ -31,6 +31,7 @@
     cursor: pointer;
 }
 .add-to-cart-button{
+    display: block;
     background-color: rgb(58, 36, 255);
     color: white;
     border:none;

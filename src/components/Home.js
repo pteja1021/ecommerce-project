@@ -18,7 +18,7 @@ function Home(){
         <>
         <div className="ribbon-container">
             <h1>Products</h1>
-            <button className="create-product-button">Create Product</button>
+            <button className="create-product-button" onClick={()=>{navigate("/products/create")}}>Create Product</button>
         </div>
         <div className='cards-container'>
             {

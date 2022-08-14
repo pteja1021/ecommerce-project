@@ -23,7 +23,7 @@ function Product(){
     const {data:reviewData}=useQuery(['product',productId,'reviews'],getReviews);
 
     const mutation=useMutation(newReview=>{
-        return axios.post(`https://obscure-refuge-62167.herokuapp.com/products/${productId}/reviews`,newReview)
+        return axios.post(`http://localhost:3000/api/products/${productId}/reviews/create`,newReview)
     })
 
     const [currentImage,setCurrentImage]=useState('')
@@ -54,9 +54,9 @@ function Product(){
         onSubmit:values=>{ 
             mutation.mutate(
                 {
-                    "name": values.name,
-                    "rating": values.rating,
-                    "review": values.review,
+                    "user_name": values.name,
+                    "Rating": values.rating,
+                    "user_review": values.review,
                     "product_id": [productId]
                 },
                 {
@@ -122,11 +122,9 @@ function Product(){
                 <p className='product-page-price'>Price : <span>{`$ ${data['price']}`}</span></p>
                 <p>Left Over: {currentQuantity}</p>
                 <p>{getQuantityText()}</p>
-                {data?.variants.map((variant,index)=>{
+                {data.variants.length!==0 ? data.variants.map((variant)=>{
                     return <button className='variant-buttons' key={variant.color} style={{backgroundColor: variant.color}} onClick={()=>{ setCurrentImage(variant?.image) }}></button>
-                })}
-                <br/>
-
+                }) : <h3>No Variants!</h3> }
                 {(data['id'] in currentCart)?
                     (<div className='counter'>                
                         <button className='quantity-buttons' disabled={currentQuantity===0?true:false} onClick={ () =>  triggerChangeInQuantity('+')  }>+</button>
@@ -154,10 +152,10 @@ function Product(){
                 <div className='product-reviews'>
                     <h3>All Reviews</h3>
                     {
-                        (reviewData?reviewData['ratings'].map((review)=>(<div className='each-customer-review' key={review.id}>
-                            <p><strong>Customer</strong>: {review.name} </p>
-                            <p><strong>Rating</strong>: {String.fromCharCode(11088).repeat(review.rating)}</p>
-                            <p><strong>Review</strong>: {review.review}</p>
+                        (reviewData?reviewData.map((review)=>(<div className='each-customer-review' key={review.id}>
+                            <p><strong>Customer</strong>: {review.user_name} </p>
+                            <p><strong>Rating</strong>: {String.fromCharCode(11088).repeat(review.Rating)}</p>
+                            <p><strong>Review</strong>: {review.user_review}</p>
                         </div>)):<h3>Loading..</h3>)
                     }
                 </div>
