@@ -13,7 +13,8 @@ function CreateProduct(){
             description : "",
             category: "",
             image: "",
-            variants: []
+            price: "",
+            quantity: "",
         },
         validationSchema:Yup.object({
             name: Yup.string().required(),
@@ -22,10 +23,21 @@ function CreateProduct(){
             image: Yup.string().required(),
             quantity: Yup.number().required(),
             price: Yup.number().required(),
-            variants_number: Yup.number().required().min(0),
         }),
         onSubmit: values => {
-            mutation.mutate(JSON.stringify(values),{onSuccess: alert("product added")})
+            mutation.mutate(
+                {
+                    "name": values.name,
+                    "description": values.description,
+                    "price": parseInt(values.price),
+                    "category": values.category,
+                    "image": values.image,
+                    "quantity": parseInt(values.quantity),
+                    "variants": []
+                }
+                ,
+                {onSuccess: alert("product added")
+            })
             values.name=""
             values.description=""
             values.category= ""
@@ -41,7 +53,7 @@ function CreateProduct(){
             {formik.touched.name && formik.errors.name ? (<div className='formik-errors'>{formik.errors.name}</div>) : null}
 
             <label htmlFor='description'/>
-            <input id='description' name='description' className='productDetailsField' {...formik.getFieldProps('desctiption')} placeholder='Description of the Product'/>
+            <input id='description' name='description' className='productDetailsField' {...formik.getFieldProps('description')} placeholder='Description of the Product'/>
             {formik.touched.description && formik.errors.description ? (<div className='formik-errors'>{formik.errors.description}</div>) : null}
 
             <label htmlFor='category'/>
