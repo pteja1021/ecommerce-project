@@ -1,11 +1,9 @@
 import axios from 'axios'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
-import { useState } from 'react'
 import {useMutation} from '@tanstack/react-query'
 import './createProductsStyling.css'
 function CreateProduct(){
-    const [variantNumberState,setVariantNumber]=useState(0);
     const mutation=useMutation(newReview=>{
         return axios.post(`http://morning-waters-03754.herokuapp.com/api/products/create`,newReview)
     })
@@ -15,9 +13,7 @@ function CreateProduct(){
             description : "",
             category: "",
             image: "",
-            variants: Array(variantNumberState).map(v=>{
-                return { "color":"" ,"image":""}
-            })
+            variants: []
         },
         validationSchema:Yup.object({
             name: Yup.string().required(),
@@ -63,20 +59,6 @@ function CreateProduct(){
             <label htmlFor='price'/>
             <input id='price' name='price' className='productDetailsField' {...formik.getFieldProps('price')} placeholder='Price of the Product'/>
             {formik.touched.price && formik.errors.price ? (<div className='formik-errors'>{formik.errors.price}</div>) : null}
-
-            <label htmlFor='variants_number'/>
-            <input name='variants_number' id='variants_number' type='number' className='productDetailsField' value={variantNumberState} onChange={(e)=>{setVariantNumber(parseInt(e.target.value))}} placeholder='Number of variants'/>
-
-            {variantNumberState && variantNumberState>0 ? Array(variantNumberState).map((variant)=>{
-                return (
-                    <>
-                    <label htmlFor={`variant_color ${variant}`}/>
-                    <input name='variant_color' id='variant_color' className='productDetailsField' placeholder='color' {...formik.getFieldProps('variants')[variant]['color']}/>
-                    <label htmlFor='variant_image'/>
-                    <input name='variant_image' id='variant_image' className='productDetailsField' placeholder='variant image' {...formik.getFieldProps('variants')[variant]['image']}/>
-                    </>
-                )
-            }) : null}
 
             <button type='submit' className='CreateProductButton'>Create Product</button>
         </form>
