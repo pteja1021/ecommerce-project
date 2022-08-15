@@ -18,7 +18,7 @@ function CreateProduct(){
         },
         validationSchema:Yup.object({
             name: Yup.string().required(),
-            description: Yup.string(),
+            description: Yup.string().required(),
             category: Yup.string().required(),
             image: Yup.string().required(),
             quantity: Yup.number().required(),
