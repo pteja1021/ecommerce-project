@@ -23,7 +23,7 @@ function Product(){
     const {data:reviewData}=useQuery(['product',productId,'reviews'],getReviews);
 
     const mutation=useMutation(newReview=>{
-        return axios.post(`http://localhost:3000/api/products/${productId}/reviews/create`,newReview)
+        return axios.post(`http://morning-waters-03754.herokuapp.com/api/products/${productId}/reviews/create`,newReview)
     })
 
     const [currentImage,setCurrentImage]=useState('')
