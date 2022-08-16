@@ -5,7 +5,7 @@ import {useMutation} from '@tanstack/react-query'
 import './createProductsStyling.css'
 function CreateProduct(){
     const mutation=useMutation(newReview=>{
-        return axios.post(`http://morning-waters-03754.herokuapp.com/api/products/create`,newReview)
+        return axios.post(`https://warm-hollows-91944.herokuapp.com/api/products/create`,newReview)
     })
     const formik=useFormik({
         initialValues : {
@@ -57,7 +57,11 @@ function CreateProduct(){
             {formik.touched.description && formik.errors.description ? (<div className='formik-errors'>{formik.errors.description}</div>) : null}
 
             <label htmlFor='category'/>
-            <input id='category' name='category' className='productDetailsField' {...formik.getFieldProps('category')} placeholder='Category of the Product'/>
+            <select id='category' name='category' className='productDetailsField' {...formik.getFieldProps('category')} placeholder='Category of the Product'>
+                <option value='Kitchen'>Kitchen</option>
+                <option value='Electronics'>Electronics</option>
+                <option value='Education'>Education</option>
+            </select>
             {formik.touched.category && formik.errors.category ? (<div className='formik-errors'>{formik.errors.category}</div>) : null}
 
             <label htmlFor='image'/>

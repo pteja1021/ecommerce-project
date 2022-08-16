@@ -23,7 +23,7 @@ function Product(){
     const {data:reviewData}=useQuery(['product',productId,'reviews'],getReviews);
 
     const mutation=useMutation(newReview=>{
-        return axios.post(`http://morning-waters-03754.herokuapp.com/api/products/${productId}/reviews/create`,newReview)
+        return axios.post(`https://warm-hollows-91944.herokuapp.com/api/products/${productId}/reviews/create`,newReview)
     })
 
     const [currentImage,setCurrentImage]=useState('')
@@ -54,9 +54,9 @@ function Product(){
         onSubmit:values=>{ 
             mutation.mutate(
                 {
-                    "user_name": values.name,
-                    "Rating": values.rating,
-                    "user_review": values.review,
+                    "name": values.name,
+                    "rating": values.rating,
+                    "review": values.review,
                     "product_id": [productId]
                 },
                 {
@@ -152,10 +152,10 @@ function Product(){
                 <div className='product-reviews'>
                     <h3>All Reviews</h3>
                     {
-                        (reviewData?reviewData.map((review)=>(<div className='each-customer-review' key={review.id}>
-                            <p><strong>Customer</strong>: {review.user_name} </p>
-                            <p><strong>Rating</strong>: {String.fromCharCode(11088).repeat(review.Rating)}</p>
-                            <p><strong>Review</strong>: {review.user_review}</p>
+                        (reviewData?reviewData['reviews'].map((review)=>(<div className='each-customer-review' key={review.id}>
+                            <p><strong>Customer</strong>: {review.name} </p>
+                            <p><strong>Rating</strong>: {String.fromCharCode(11088).repeat(review.rating)}</p>
+                            <p><strong>Review</strong>: {review.review}</p>
                         </div>)):<h3>Loading..</h3>)
                     }
                 </div>
